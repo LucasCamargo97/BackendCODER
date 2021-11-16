@@ -67,6 +67,13 @@ class Contenedor {
         console.error(error)
       });
   }
+
+  updateProduct(){
+
+  }
+
+  
+
   deleteById(id){
     fs.promises.readFile(this.name, 'utf-8')
       .then(result => {
