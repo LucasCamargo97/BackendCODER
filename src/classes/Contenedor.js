@@ -1,11 +1,11 @@
 const fs = require("fs");
 
 class Contenedor {
-  constructor(name) {
-    this.name = name;
+  constructor() {
+    this.name = 'D:/PROGRAMACION/Backend/GIT/src/files/products.JSON'
   }
   save(producto) {
-    fs.promises
+    return fs.promises
       .readFile(this.name, "utf-8")
       .then((result) => {
         console.log(`Se leyó el archivo ${this.name} con exito`);
@@ -22,11 +22,11 @@ class Contenedor {
         if (objFound) throw new Error("El objeto ya existe");
         producto.id = id;
         aux.push(producto);
-        fs.promises
+       return fs.promises
           .writeFile(this.name, JSON.stringify(aux,null,2))
-          .then((result) => {
+          .then(() => {
             console.log("Escritura con exito");
-            console.log(`Se asigno el id ${producto.id} al objeto`);
+           return `Se asigno el id ${producto.id} al objeto`
           })
           .catch((error) => {
             console.error(`Error en la escritura ${error}`);
@@ -68,14 +68,38 @@ class Contenedor {
       });
   }
 
-  updateProduct(){
-
+  updateProduct(id,body){
+      return fs.promises.readFile(this.name, 'utf-8')
+      .then(result => {
+        if (!id) throw new Error('Falta el parametro id')
+        let aux = !result ? "" : JSON.parse(result);
+        if (!aux) throw new Error('El documento esta vacio')
+        const obj = aux.find((obj) => obj.id === id);
+        let products = aux.filter(p => p.id !== id)
+        let newObj = {
+          ...obj,
+          title: body.title,
+          price: body.price,
+          thumbnail: body.thumbnail
+        }
+        products = [...products,newObj]
+        return fs.promises.writeFile(this.name, JSON.stringify(products,null,2))
+        .then(()=>({
+          status:"Success", message:"Product updated"
+        }))
+      })
+      .catch(error => {
+        console.error(error)
+      });
   }
 
+  registerProduct(){
+
+  }
   
 
   deleteById(id){
-    fs.promises.readFile(this.name, 'utf-8')
+    return fs.promises.readFile(this.name, 'utf-8')
       .then(result => {
         if (!id) throw new Error('Falta el parametro id')
         let aux = !result ? "" : JSON.parse(result);
