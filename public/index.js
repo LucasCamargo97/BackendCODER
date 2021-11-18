@@ -1,16 +1,16 @@
 document.addEventListener('submit', event=>{
     event.preventDefault()
-    let form = document.querySelector('#petForm')
+    let form = document.querySelector('#productForm')
     let data = new FormData(form)
-    let name = data.get('name')
-    let specie = data.get('specie')
-    let age = data.get('age')
+    let title = data.get('title')
+    let price = data.get('price')
+    let thumbnail = data.get('thumbnail')
     let req = {
-        name:name,
-        specie:specie,
-        age:age
+        title:title,
+        price:price,
+        thumbnail:thumbnail
     }
-    fetch('http://localhost:8080/api/pets',{
+    fetch('http://localhost:8080/api/productos',{
         method:'POST',
         body:JSON.stringify(req),
         headers:{

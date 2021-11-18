@@ -28,6 +28,7 @@ router.get('/api/productoRandom',(req,res)=>{
 //POST
 router.post('/api/productos', (req,res)=>{
     let body = req.body
+    console.log(body)
     contenedor.save(body).then(result=>{
         res.send(result);
     })
