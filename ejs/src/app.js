@@ -1,7 +1,5 @@
-const express = require('express')
-const upload = require('./services/upload')
-const cors = require('cors')
-const Contenedor = require('./classes/Contenedor');
+import express from 'express'
+import cors from 'cors'
 const app = express()
 
 app.listen(8080,()=>{
@@ -10,7 +8,7 @@ app.listen(8080,()=>{
 
 const productsRouter = require('./routes/products')
 
-
+app.set('view engine','ejs')
 app.use(express.json());
 app.use(express.urlencoded({extended:true}))
 app.use('/imagenes', express.static(__dirname+'public'))

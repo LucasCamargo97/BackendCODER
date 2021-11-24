@@ -1,6 +1,6 @@
-const express = require('express')
+import express from 'express'
 const router = express.Router()
-const Contenedor = require('../classes/Contenedor')
+import Contenedor from '../classes/Contenedor'
 const contenedor = new Contenedor()
 
 //GET

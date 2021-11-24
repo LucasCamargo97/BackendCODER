@@ -1,6 +1,6 @@
-const express = require('express')
+import express from 'express'
 const router = express.Router()
-const Contenedor = require('../classes/Contenedor')
+import Contenedor from '../classes/Contenedor'
 const contenedor = new Contenedor()
 
 //GET
@@ -34,6 +34,15 @@ router.post('/api/productos', (req,res)=>{
     })
 })
 
+router.post('/',upload.single('image'),(req,res)=>{
+    let file = req.file;
+    let body = req.body;
+    body.thumbnail = req.protocol+"://"+req.hostname+":8080"+'/imagenes/'+file.filename;
+    contenedor.save(body).then(result=>{
+        res.send(result);
+    })
+})
+
 //PUT
 router.put('/api/productos/:id',(req,res)=>{
     let body = req.body;
@@ -57,4 +66,4 @@ router.delete('/api/productos/:id',(req,res)=>{
 
 
 
-module.exports = router
+export default router
