@@ -1,8 +1,8 @@
-const fs = require("fs");
+import fs from 'fs'
 
 class Contenedor {
   constructor() {
-    this.name = 'D:/PROGRAMACION/Backend/GIT/src/files/products.JSON'
+    this.name = 'D:/PROGRAMACION/Backend/GIT/handlebars/src/files/products.JSON'
   }
   save(producto) {
     return fs.promises

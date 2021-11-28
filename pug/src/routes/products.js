@@ -1,6 +1,6 @@
 import express from 'express'
 const router = express.Router()
-import Contenedor from '../classes/Contenedor'
+import Contenedor from '../classes/Contenedor.js'
 const contenedor = new Contenedor()
 
 //GET
@@ -56,5 +56,4 @@ router.delete('/api/productos/:id',(req,res)=>{
 
 
 
-
-module.exports = router
+export default router

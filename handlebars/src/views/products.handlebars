@@ -1,0 +1,13 @@
+<h1 style="text-align:center">Todos los productos</h1>
+<div class="main-container">
+    <div class="product-container">
+        {{#each products}}
+        <div class="product-card">
+            <p>{{this.title}}</p>
+            <br>
+            <p>{{this.price}}</p>
+            <img class="product-card-img" src={{this.thumbnail}}>
+        </div>
+        {{/each}}
+    </div>
+</div>

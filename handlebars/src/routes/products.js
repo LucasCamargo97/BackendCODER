@@ -1,6 +1,7 @@
 import express from 'express'
+import upload from '../services/upload.js'
 const router = express.Router()
-import Contenedor from '../classes/Contenedor'
+import Contenedor from '../classes/Contenedor.js'
 const contenedor = new Contenedor()
 
 //GET
