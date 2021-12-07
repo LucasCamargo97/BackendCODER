@@ -6,7 +6,6 @@ import router from './routes/products.js'
 import upload from './services/upload.js'
 import Contenedor from './classes/Contenedor.js'
 import __dirname from './utils.js'
-import authMiddleware from './utils.js'
 
 const contenedor = new Contenedor()
 const app = express()
@@ -28,7 +27,7 @@ app.use((req,res,next)=>{
     console.log(new Date().toTimeString().split(" ")[0], req.method, req.url);
     next();
 })
-app.use(express.static(__dirname+'public'))
+app.use(express.static(__dirname+'/public'))
 app.use(cors())
 app.use(router)
 app.use((err,req,res,next)=>{
@@ -52,7 +51,7 @@ app.post('/api/uploadfile',upload.fields([
     res.send(files);
 })
 
-app.get('/view/products',authMiddleware,(req,res)=>{
+app.get('/view/products',(req,res)=>{
     contenedor.getAll().then(result=>{
         let info = result.payload;
         let prepObj ={
@@ -62,11 +61,23 @@ app.get('/view/products',authMiddleware,(req,res)=>{
     })
 })
 
+const chat = []
+
   io.on('connection', async socket=>{
     console.log(`El socket ${socket.id} se ha conectado`)
     let products = await contenedor.getAll();
     socket.emit('deliverProducts',products);
 
+    socket.emit('chat', chat)
+    socket.on('chat', data => {
+    chat.push({ email: data.email, date: data.date, msg: data.msg })
+    io.emit('chat', chat)
 })
+
+})
+
+
+
+
 
 

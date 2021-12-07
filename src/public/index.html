@@ -44,6 +44,23 @@
             <div>
                 <div id="productsTable"></div>
             </div>
+            <div class="col-sm-6 col-md-4" style="padding: 2rem; text-align: center;">
+                <h1 class="text-center">Centro de mensajes</h1>
+            
+                <div>
+                  <label for="email" class="form-label">Email</label>
+                  <input type="email" class="form-control" id="email" placeholder="mail@mail.com">
+                </div>
+                <div>
+                  <label for="msg" class="form-label">Mensaje</label>
+                  <input type="msg" class="form-control" id="msg">
+                </div>
+                
+                <div style="display: flex; justify-content: right; align-items: center;">
+                  <button id="sendBtn" class="btn btn-primary">Enviar</button>
+                </div>
+            
+                <div  id="chat"></div>
     </div>
     
     <script src="/socket.io/socket.io.js"></script>
