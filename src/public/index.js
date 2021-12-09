@@ -53,15 +53,20 @@ function sendForm(event){
     let form = document.querySelector('#productForm')
     let data = new FormData(form)
     let title = data.get('title')
-    let price = data.get('price')
-    let thumbnail = data.get('thumbnail')
     let description = data.get('description')
+    let code = data.get('code')
+    let thumbnail = data.get('thumbnail')
+    let price = data.get('price')
+    let stock = data.get('stock')
     let req = {
         title:title,
-        price:price,
+        description:description,
+        code:code,
         thumbnail:thumbnail,
-        description:description
+        price:price,
+        stock:stock
     }
+    alert(`El producto '${title}' se ha añadido con exito!!`)
     fetch('http://localhost:8080/api/productos',{
         method:'POST',
         body:JSON.stringify(req),

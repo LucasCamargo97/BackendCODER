@@ -1,44 +1,52 @@
 [
   {
-    "title": "pera",
-    "price": 56,
-    "thumbnail": "https://us.123rf.com/450wm/atoss/atoss1801/atoss180100100/94715991-pera-con-hoja.jpg?ver=6",
-    "id": 1
-  },
-  {
-    "title": "manzana",
-    "price": 67,
+    "title": "Manzana",
+    "description": "La manzana es una fruta comestible. Tiene forma de globo, un poco hundida en sus extremos. Su epicarpio es verdoso o amarillento y presenta semillas de tamaño pequeño, protegidas por un endocarpio coriáceo. Las manzanas rojas y las manzanas verdes son las más conocidas, aunque también existen las manzanas amarillas.",
+    "code": "23423",
     "thumbnail": "https://st.depositphotos.com/1000955/1261/i/600/depositphotos_12616481-stock-photo-fresh-red-apple.jpg",
-    "id": 2
+    "price": "45",
+    "stock": "156",
+    "id": 1,
+    "timestamp": 1639087182098
   },
   {
-    "title": "banana",
-    "price": 79,
+    "title": "Banana",
+    "description": "La manzana es una fruta comestible. Tiene forma de globo, un poco hundida en sus extremos. Su epicarpio es verdoso o amarillento y presenta semillas de tamaño pequeño, protegidas por un endocarpio coriáceo. Las manzanas rojas y las manzanas verdes son las más conocidas, aunque también existen las manzanas amarillas.",
+    "code": "15488",
     "thumbnail": "https://media.istockphoto.com/photos/banana-picture-id1184345169?k=20&m=1184345169&s=612x612&w=0&h=EKwCw7Zx20N3l8G_rQI6KcitWTQ5ahkgmEBr2QA1FMk=",
-    "id": 3
+    "price": "54",
+    "stock": "54",
+    "id": 2,
+    "timestamp": 1639087264942
   },
   {
-    "title": "zandia",
-    "price": "45",
-    "thumbnail": "https://us.123rf.com/450wm/valery121283/valery1212831906/valery121283190600193/125370157-sand%C3%ADa-fresca-aislado-sobre-fondo-blanco-.jpg?ver=6",
-    "id": 4
+    "title": "Pera",
+    "description": "La pera es el fruto del peral (Pyrus communis, de la familia de las Rosáceas). La pera es una fruta jugosa, carnosa, de diferente tamaño, sabor y color (del verde al amarillo, al rojo, hasta el color castaña), según las variedades de pera cultivadas. ... La flor del peral es blanca y aparece en primavera.",
+    "code": "165456",
+    "thumbnail": "https://www.niter.com.uy/wp-content/uploads/2017/09/beneficios-de-las-peras.jpg",
+    "price": "89",
+    "stock": "75",
+    "id": 3,
+    "timestamp": 1639087335216
   },
   {
-    "title": "papa",
-    "price": "12",
-    "thumbnail": "https://media.istockphoto.com/photos/single-potato-picture-id176012507?k=20&m=176012507&s=612x612&w=0&h=pEuyq79XV7Oiprucj9neZMn27kHj9qou_DLLwt-eYpI=",
-    "id": 5
+    "title": "Sandia",
+    "description": "La sandía es un fruto grande y de forma más o menos esférica que suele consumirse cruda como postre. Su pulpa es de color rojizo o amarillento y de sabor dulce. La pulpa es dulce, jugosa, refrescante y de color amarillento o rojizo. Contiene muchas pepitas de color negro, marrón o blanco.",
+    "code": "1482",
+    "thumbnail": "https://5aldia.cl/wp-content/uploads/2018/03/sandia.jpg",
+    "price": "110",
+    "stock": "80",
+    "id": 4,
+    "timestamp": 1639087393000
   },
   {
-    "title": "zanahoria",
-    "price": "45",
-    "thumbnail": "https://elpoderdelconsumidor.org/wp-content/uploads/2021/05/zanahorias.png",
-    "id": 6
-  },
-  {
-    "title": "Arandano",
-    "price": "66",
-    "thumbnail": "https://static9.depositphotos.com/1628352/1107/i/600/depositphotos_11071481-stock-photo-blueberry.jpg",
-    "id": 7
+    "title": "Arándanos",
+    "description": "El arándano es un fruto que crece silvestre en zonas frescas del hemisferio norte. Es una baya globosa de color negro azulado que mide unos 6mm de diámetro. Es una baya globosa, de unos 6mm de diámetro y de color negro azulado. Su pulpa es aromática, jugosa y de sabor algo ácido.",
+    "code": "745274",
+    "thumbnail": "http://cdn.shopify.com/s/files/1/0271/3360/8038/products/arandanos_1200x1200.jpg?v=1587041312",
+    "price": "120",
+    "stock": "25",
+    "id": 5,
+    "timestamp": 1639087506262
   }
 ]

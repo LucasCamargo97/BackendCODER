@@ -5,7 +5,7 @@ const router = express.Router()
 import Contenedor from '../classes/Contenedor.js'
 const contenedor = new Contenedor()
 
-//GET
+//---------------GET---------------------------------
 router.get('/api/productos', (req,res)=>{
     contenedor.getAll().then(result=>{
         res.send(result);
@@ -19,7 +19,6 @@ router.get('/api/productos/:id',(req,res)=>{
     })
 })
 
-
 router.get('/api/productoRandom',(req,res)=>{
     const id = Math.floor(Math.random() * 3) +1
     contenedor.getById(id).then(result=>{
@@ -27,7 +26,7 @@ router.get('/api/productoRandom',(req,res)=>{
     })
 })
 
-//POST
+//------------------POST---------------------------
 router.post('/api/productos', (req,res)=>{
     let body = req.body
     console.log(body)
@@ -51,7 +50,8 @@ router.post('/',upload.single('image'),(req,res)=>{
     })
 })
 
-//PUT
+
+//----------------PUT-------------------------------
 router.put('/api/productos/:id',(req,res)=>{
     let body = req.body;
     let id = parseInt(req.params.id);
@@ -60,7 +60,7 @@ router.put('/api/productos/:id',(req,res)=>{
     })
 })
 
-//DELETE
+//----------------DELETE---------------------------
 
 router.delete('/api/productos/:id',(req,res)=>{
     let id= parseInt(req.params.id);
@@ -68,9 +68,6 @@ router.delete('/api/productos/:id',(req,res)=>{
         res.send(result)
     })
 })
-
-
-
 
 
 export default router

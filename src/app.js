@@ -3,9 +3,10 @@ import {Server} from 'socket.io'
 import {engine} from 'express-handlebars'
 import cors from 'cors'
 import router from './routes/products.js'
+import cartRouter from './routes/carts.js'
 import upload from './services/upload.js'
 import Contenedor from './classes/Contenedor.js'
-import __dirname from './utils.js'
+import __dirname, {authMiddleware} from './utils.js'
 
 const contenedor = new Contenedor()
 const app = express()
@@ -18,6 +19,8 @@ io.on('connection', socket => {
     console.log('Se ha conectado un nuevo cliente!')
 })
 
+const admin = true
+
 app.engine('handlebars',engine());
 app.set('views',__dirname+'/views');
 app.set('view engine','handlebars');
@@ -25,11 +28,13 @@ app.use(express.json());
 app.use(express.urlencoded({extended:true}))
 app.use((req,res,next)=>{
     console.log(new Date().toTimeString().split(" ")[0], req.method, req.url);
+    req.auth = admin
     next();
 })
 app.use(express.static(__dirname+'/public'))
 app.use(cors())
 app.use(router)
+app.use(cartRouter)
 app.use((err,req,res,next)=>{
     console.log(err.stack)
     res.status(500).send('Error en el servidor')
@@ -51,7 +56,7 @@ app.post('/api/uploadfile',upload.fields([
     res.send(files);
 })
 
-app.get('/view/products',(req,res)=>{
+app.get('/view/products', authMiddleware,(req,res)=>{
     contenedor.getAll().then(result=>{
         let info = result.payload;
         let prepObj ={

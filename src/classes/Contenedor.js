@@ -21,6 +21,7 @@ class Contenedor {
       if (objFound)
         throw new Error("El objeto ya existe");
       producto.id = id;
+      producto.timestamp = Date.now()
       aux.push(producto);
       try {
         await fs.promises

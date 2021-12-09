@@ -20,31 +20,41 @@
             <h1 class="title">Registra un nuevo producto</h1>
             <form id="productForm" name="productForm" class="form">
                 <div class="form-floating form-input">
-                    <input class="form-control" name="title" id="title" type="text" placeholder="title" required>
+                    <input class="form-control" name="title" id="title" type="text" required>
                     <label for="title">TITLE</label>
                 </div>
                 <div class="form-floating form-input">
-                    <input class="form-control" name="price" id="price" type="text" required>
-                    <label for="price">PRICE</label>
+                    <input class="form-control" name="description" id="description" required>
+                    <label for="description">DESCRIPTION</label>
+                </div>
+                <div class="form-floating form-input">
+                    <input class="form-control" name="code" id="code" type="text" required>
+                    <label for="code">CODE</label>
                 </div>
                 <div class="form-floating form-input">
                     <input class="form-control" name="thumbnail" id="thumbnail" type="text" required>
                     <label for="thumbnail">THUMBNAIL</label>
                 </div>
                 <div class="form-floating form-input">
-                    <input class="form-control" name="description" id="description" placeholder="description" required>
-                    <label for="description">DESCRIPTION</label>
+                    <input class="form-control" name="price" id="price" type="text" required>
+                    <label for="price">PRICE</label>
+                </div>
+                <div class="form-floating form-input">
+                    <input class="form-control" name="stock" id="stock" type="text" required>
+                    <label for="stock">STOCK</label>
                 </div>
                 <div style="margin-top:30px; display:flex; justify-content: center;">
-                    <input type="submit" class="submit-button">
+                    <input style="margin-right: 6px;" type="submit" class="submit-button">
+                    <br>
+                    <input type="reset" class="submit-button">
                 </div>
             </form>
         </div>
-        <h1>Productos actualmente disponibles</h1>
             <div>
+                <h1>Productos actualmente disponibles</h1>
                 <div id="productsTable"></div>
             </div>
-            <div class="col-sm-6 col-md-4" style="padding: 2rem; text-align: center;">
+            <div class="col-sm-6 col-md-4" style="padding: 2rem; text-align: center; align-items: center; justify-content: center;">
                 <h1 class="text-center">Centro de mensajes</h1>
             
                 <div>

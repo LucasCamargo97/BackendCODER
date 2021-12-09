@@ -1,0 +1,23 @@
+[
+  {
+    "id": 2,
+    "timestamp": 1639089392328,
+    "products": []
+  },
+  {
+    "id": 1,
+    "timestamp": 1639089391347,
+    "products": [
+      {
+        "title": "Banana",
+        "description": "La manzana es una fruta comestible. Tiene forma de globo, un poco hundida en sus extremos. Su epicarpio es verdoso o amarillento y presenta semillas de tamaño pequeño, protegidas por un endocarpio coriáceo. Las manzanas rojas y las manzanas verdes son las más conocidas, aunque también existen las manzanas amarillas.",
+        "code": "15488",
+        "thumbnail": "https://media.istockphoto.com/photos/banana-picture-id1184345169?k=20&m=1184345169&s=612x612&w=0&h=EKwCw7Zx20N3l8G_rQI6KcitWTQ5ahkgmEBr2QA1FMk=",
+        "price": "54",
+        "stock": "54",
+        "id": 2,
+        "timestamp": 1639087264942
+      }
+    ]
+  }
+]
