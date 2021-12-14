@@ -11,6 +11,8 @@ class Contenedor {
       console.log(`Se leyó el archivo ${productURL} con exito`);
       let id = null;
       let aux = !result ? "" : JSON.parse(result);
+      const hasProduct = aux.find(e => e.title === producto.title)
+      if (hasProduct) throw new Error('El producto ya existe con el mismo nombre.')
       if (!aux) {
         aux = [];
         id = 1;

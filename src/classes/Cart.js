@@ -64,39 +64,32 @@ class Cart {
 
   async addProduct (cartId, productId) {
     try {
-      if (!cartId || !productId) throw new Error('falta el parametro id del cart o del producto')
+      if (!cartId || !productId) throw new Error('Missing \'cartId\' or \'productId\' parameter!')
       const productsFile = await fs.promises.readFile(productURL, 'utf-8')
-      if (!productsFile) throw new Error('El documento esta vacio!')
+      if (!productsFile) throw new Error('The document is empty!')
       const products = JSON.parse(productsFile)
       const product = products.find(p => p.id === productId)
-      if (!product) throw new Error ('The product dont exist')
-          const cartsFile = await fs.promises.readFile(cartURL, 'utf-8')
-          if (!cartsFile) throw new Error('El documento esta vacio!')
-          const aux = JSON.parse(cartsFile)
-          let carts = JSON.parse(cartsFile).filter(c => c.id !== cartId)
-          const cart = aux.find(c => c.id === cartId)
-          let variable = aux.map(e => e.products)
-          let cartsProductId = variable.map(e => e.map(e => typeof e === "object"? e.id : null))
-          let ids = cartsProductId.map(e => e.length > 0? e[0]:null)
-          let exist = ids.some(e => e === productId)
-          console.log(ids)
-          if(exist){
-            throw new Error ('El producto ya existe en el carrito')
-          }else{
-            cart.products = [
-              ...cart.products,
-              product
-            ]
-  
-            carts = [
-              ...carts,
-              cart
-            ]
-  
-            await fs.promises.writeFile(cartURL, JSON.stringify(carts, null, 2))
-            return { status: 'success', payload: 'El producto se añadio satisfactoriamente' }
-          }
+      if (!product) throw new Error('Non-existent product.')
 
+      const cartsFile = await fs.promises.readFile(cartURL, 'utf-8')
+      if (!cartsFile) throw new Error('The document is empty!')
+      const aux = JSON.parse(cartsFile)
+      let carts = JSON.parse(cartsFile).filter(c => c.id !== cartId)
+      const cart = aux.find(c => c.id === cartId)
+      const exists = cart.products.find(e => e.id === productId)
+      if(exists) throw new Error('The product already exists in the cart')
+      cart.products = [
+        ...cart.products,
+        product
+      ]
+
+      carts = [
+        ...carts,
+        cart
+      ]
+
+      await fs.promises.writeFile(cartURL, JSON.stringify(carts, null, 2))
+      return { status: 'success', payload: 'Product has been added successfully.' }
     } catch (err) {
       console.log(`Product add error: ${err.message}`)
       return { status: 'error', message: 'Product add error.' }
