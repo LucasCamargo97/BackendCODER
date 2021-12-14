@@ -1,6 +1,7 @@
 import express from 'express'
 import upload from '../services/upload.js'
 import {io} from '../app.js'
+import { authMiddleware } from '../utils.js'
 const router = express.Router()
 import Contenedor from '../classes/Contenedor.js'
 const contenedor = new Contenedor()
@@ -27,7 +28,7 @@ router.get('/api/productoRandom',(req,res)=>{
 })
 
 //------------------POST---------------------------
-router.post('/api/productos', (req,res)=>{
+router.post('/api/productos', authMiddleware, (req,res)=>{
     let body = req.body
     console.log(body)
     contenedor.save(body).then(result=>{
@@ -35,7 +36,7 @@ router.post('/api/productos', (req,res)=>{
     })
 })
 
-router.post('/',upload.single('image'),(req,res)=>{
+router.post('/',authMiddleware, upload.single('image'),(req,res)=>{
     let file = req.file;
     let product = req.body;
     product.thumbnail = req.protocol+"://"+req.hostname+":8080"+'/images/'+file.filename;
@@ -52,9 +53,9 @@ router.post('/',upload.single('image'),(req,res)=>{
 
 
 //----------------PUT-------------------------------
-router.put('/api/productos/:id',(req,res)=>{
+router.put('/api/productos/:id',authMiddleware, (req,res)=>{
     let body = req.body;
-    let id = parseInt(req.params.id);
+    let id = Number(req.params.id);
     contenedor.updateProduct(id,body).then(result=>{
         res.send(result);
     })
@@ -62,8 +63,8 @@ router.put('/api/productos/:id',(req,res)=>{
 
 //----------------DELETE---------------------------
 
-router.delete('/api/productos/:id',(req,res)=>{
-    let id= parseInt(req.params.id);
+router.delete('/api/productos/:id', authMiddleware, (req,res)=>{
+    let id= Number(req.params.id);
     contenedor.deleteById(id).then(result=>{
         res.send(result)
     })

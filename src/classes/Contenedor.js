@@ -5,6 +5,7 @@ const productURL = __dirname+'/files/products.json'
 class Contenedor {
   async save(producto) {
     try {
+      if (Object.keys(producto).length === 0) throw new Error('falta el parametro del producto o esta vacio')
       const result = await fs.promises
         .readFile(productURL, "utf-8");
       console.log(`Se leyó el archivo ${productURL} con exito`);
@@ -78,11 +79,16 @@ class Contenedor {
       if (!aux)
         throw new Error('El documento esta vacio');
       const obj = aux.find((obj_1) => obj_1.id === id);
+      if (!obj) throw new Error('Producto no encontrado')
       let products = aux.filter(p => p.id !== id);
       let newObj = {
         ...obj,
         title: body.title,
-        price: body.price,
+        description: body.description,
+        code: body.code,
+        timestamp: body.timestamp,
+        price: parseInt(body.price),
+        stock: parseInt(body.stock),
         thumbnail: body.thumbnail
       };
       products = [...products, newObj];
@@ -95,31 +101,27 @@ class Contenedor {
     }
   }
   
-  async deleteById(id){
+  async deleteById (id) {
     try {
-      const result = await fs.promises.readFile(productURL, 'utf-8');
-      if (!id)
-        throw new Error('Falta el parametro id');
-      let aux = !result ? "" : JSON.parse(result);
-      if (!aux)
-        throw new Error('El documento esta vacio');
-      const idF = aux.find((obj) => obj.id === id);
-      if (!idF)
-        throw new Error(`el ID ${id} no esta en el documento`);
-      let arr = aux.filter(obj_1 => obj_1.id !== id);
-      arr.length === 0
-        ? (arr = '')
-        : (arr = JSON.stringify(arr, null, 2));
+      if (!id) throw new Error('Falta el parametro ID')
+      const productsFile = await fs.promises.readFile(productURL, 'utf-8')
+      const products = productsFile ? JSON.parse(productsFile) : []
 
-      fs.writeFile(productURL, arr, error => {
-        if (error)
-          throw new Error(`ERROR${error}`);
-        console.log(`El objeto con la ID '${id}' fue removido`);
-      });
-    } catch (error_1) {
-      console.error(error_1);
+      const product = products.find(e => e.id === id)
+      if (!product) throw new Error('Producto no encontrado')
+
+      let newProducts = products.filter(e => e.id !== id)
+      if (newProducts.length === 0) newProducts = ''
+      else newProducts = JSON.stringify(newProducts)
+
+      await fs.promises.writeFile(productURL, newProducts)
+      return { status: 'success', message: 'Producto eliminado satisfactoriamente.' }
+    } catch (err) {
+      console.log(`Save file error: ${err.message}`)
+      return { status: 'error', message: 'Error al eliminar el producto.' }
     }
   }
+
   deleteAll(){
     fs.writeFile(productURL, '', error => {
         try {

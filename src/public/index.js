@@ -1,5 +1,6 @@
 const socket = io()
 
+
 socket.on('deliverProducts',result=>{
     let products = result.payload;
     fetch('templates/productTable.handlebars').then(string=>string.text()).then(template=>{
@@ -66,7 +67,8 @@ function sendForm(event){
         price:price,
         stock:stock
     }
-    alert(`El producto '${title}' se ha añadido con exito!!`)
+    alert(`Gracias!, si eres Admin el producto '${title}' se ha añadido con exito
+    de lo contrario no lo podras añadir`)
     fetch('http://localhost:8080/api/productos',{
         method:'POST',
         body:JSON.stringify(req),

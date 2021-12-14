@@ -56,7 +56,7 @@ app.post('/api/uploadfile',upload.fields([
     res.send(files);
 })
 
-app.get('/view/products', authMiddleware,(req,res)=>{
+app.get('/view/products',(req,res)=>{
     contenedor.getAll().then(result=>{
         let info = result.payload;
         let prepObj ={
