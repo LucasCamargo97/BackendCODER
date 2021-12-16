@@ -30,8 +30,8 @@ router.get('/api/productoRandom',(req,res)=>{
 
 //------------------POST---------------------------
 router.post('/api/productos', authMiddleware, (req,res)=>{
-    let product = req.product
-    productsService.registerProduct(product).then(result=>{
+    let body = req.body
+    productsService.registerProduct(body).then(result=>{
         res.send(result);
     })
 })

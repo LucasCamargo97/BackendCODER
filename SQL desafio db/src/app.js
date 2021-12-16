@@ -8,7 +8,6 @@ import Messages from './classes/Messages.js'
 import __dirname, {authMiddleware} from './utils.js'
 import database from './config.js'
 
-const productsService = new Container()
 const app = express()
 const PORT = process.env.PORT || 8080;
 const server = app.listen(PORT,()=>{
