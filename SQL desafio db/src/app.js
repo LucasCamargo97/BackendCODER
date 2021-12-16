@@ -3,21 +3,19 @@ import {Server} from 'socket.io'
 import {engine} from 'express-handlebars'
 import cors from 'cors'
 import router from './routes/products.js'
-import cartRouter from './routes/carts.js'
 import upload from './services/upload.js'
-import Contenedor from './classes/Contenedor.js'
+import Container from './classes/Container.js'
 import __dirname, {authMiddleware} from './utils.js'
+import database from './config.js'
 
-const contenedor = new Contenedor()
+const productsService = new Container()
 const app = express()
 const PORT = process.env.PORT || 8080;
 const server = app.listen(PORT,()=>{
     console.log("Listening on port: ",PORT)
 })
 export const io = new Server(server)
-io.on('connection', socket => {
-    console.log('Se ha conectado un nuevo cliente!')
-})
+const container = new Container(database, 'chats')
 
 const admin = true
 
@@ -34,7 +32,6 @@ app.use((req,res,next)=>{
 app.use(express.static(__dirname+'/public'))
 app.use(cors())
 app.use(router)
-app.use(cartRouter)
 app.use((err,req,res,next)=>{
     console.log(err.stack)
     res.status(500).send('Error en el servidor')
@@ -66,20 +63,25 @@ app.get('/view/products',(req,res)=>{
     })
 })
 
-const chat = []
-
-  io.on('connection', async socket=>{
-    console.log(`El socket ${socket.id} se ha conectado`)
-    let products = await contenedor.getAll();
-    socket.emit('deliverProducts',products);
-
-    socket.emit('chat', chat)
-    socket.on('chat', data => {
-    chat.push({ email: data.email, date: data.date, msg: data.msg })
-    io.emit('chat', chat)
-})
-
-})
+io.on('connection', socket => {
+    console.log('Cliente conectado.')
+    container.getMessages().then(result => {
+      if (result.status === 'success') {
+        io.emit('chats', result.payload)
+      }
+    })
+    socket.on('chats', data => {
+      container.saveMessage(data)
+        .then(result => console.log(result))
+        .then(() => {
+          container.getMessages().then(result => {
+            if (result.status === 'success') {
+              io.emit('chats', result.payload)
+            }
+          })
+        })
+    })
+  })
 
 
 
