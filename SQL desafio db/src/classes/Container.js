@@ -18,7 +18,8 @@ export default class Container{
                 })
             }
         })
-        
+      
+
         }
         async getProducts(){
             try{
@@ -67,24 +68,6 @@ export default class Container{
                   return { status:'success', payload:'Product has been deleted successfully.' }
                 } catch (error) {
                   return {status:'error', message:error}
-                }
-              }
-            
-              async saveMessage (message) {
-                try {
-                  await database.insert(message).table('chats')
-                  return {status: 'success', payload:'Chat has been saved successfully.' }
-                } catch (error) {
-                  return { status:'error', message:error}
-                }
-              }
-            
-              async getMessages () {
-                try {
-                  const chats = await database.select().table('chats')
-                  return { status: 'success', payload: chats }
-                } catch (error) {
-                  return { status:'error', message:error}
                 }
               }
     }

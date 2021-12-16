@@ -4,7 +4,7 @@ import {engine} from 'express-handlebars'
 import cors from 'cors'
 import router from './routes/products.js'
 import upload from './services/upload.js'
-import Container from './classes/Container.js'
+import Messages from './classes/Messages.js'
 import __dirname, {authMiddleware} from './utils.js'
 import database from './config.js'
 
@@ -15,7 +15,7 @@ const server = app.listen(PORT,()=>{
     console.log("Listening on port: ",PORT)
 })
 export const io = new Server(server)
-const container = new Container(database, 'chats')
+const messages = new Messages(database, 'chats')
 
 const admin = true
 
@@ -65,16 +65,16 @@ app.get('/view/products',(req,res)=>{
 
 io.on('connection', socket => {
     console.log('Cliente conectado.')
-    container.getMessages().then(result => {
+    messages.getMessages().then(result => {
       if (result.status === 'success') {
         io.emit('chats', result.payload)
       }
     })
     socket.on('chats', data => {
-      container.saveMessage(data)
+      messages.saveMessage(data)
         .then(result => console.log(result))
         .then(() => {
-          container.getMessages().then(result => {
+          messages.getMessages().then(result => {
             if (result.status === 'success') {
               io.emit('chats', result.payload)
             }
