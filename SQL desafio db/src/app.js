@@ -66,16 +66,29 @@ app.get('/view/products',(req,res)=>{
 
 let chats = await messages.getMessages()
 
+
+
 io.on('connection', socket => {
     console.log('Cliente conectado.')
     socket.emit('chat', chats.payload)
     socket.on('chat', async data => {
-      messages.saveMessages(data)
+      messages.saveMessage(data)
       io.emit('chat', chats.payload)
     })
   })
 
-
+  app.get('/api/chat', (req,res)=>{
+    messages.getMessages().then(result=>{
+        res.send(result);
+    })
+  })
+  
+  app.post('/api/chat', (req,res)=>{
+    let body = req.body
+    messages.saveMessage(body).then(result=>{
+        res.send(result);
+    })
+  })
 
 
 
