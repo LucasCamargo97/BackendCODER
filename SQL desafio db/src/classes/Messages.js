@@ -22,7 +22,7 @@ export default class Chat{
                 
     async saveMessage (message) {
         try {
-          await mariadb.insert(message).table('chat')
+          await mariadb.table('chat').insert(message)
           return {status: 'success', payload:'Chat has been saved successfully.' }
         } catch (error) {
           return { status:'error', message:error}

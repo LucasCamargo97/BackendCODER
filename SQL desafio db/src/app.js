@@ -14,7 +14,7 @@ const server = app.listen(PORT,()=>{
     console.log("Listening on port: ",PORT)
 })
 export const io = new Server(server)
-const messages = new Messages(mariadb, 'chats')
+const messages = new Messages()
 
 const admin = true
 
