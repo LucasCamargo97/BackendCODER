@@ -6,7 +6,7 @@ import router from './routes/products.js'
 import upload from './services/upload.js'
 import Messages from './classes/Messages.js'
 import __dirname, {authMiddleware} from './utils.js'
-import database from './config.js'
+import mariadb from './config.js'
 
 const app = express()
 const PORT = process.env.PORT || 8080;
@@ -14,7 +14,7 @@ const server = app.listen(PORT,()=>{
     console.log("Listening on port: ",PORT)
 })
 export const io = new Server(server)
-const messages = new Messages(database, 'chats')
+const messages = new Messages(mariadb, 'chats')
 
 const admin = true
 

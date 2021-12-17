@@ -1,10 +1,10 @@
-import database from '../config.js'
+import mariadb from '../config.js'
 
 export default class Chat{
     constructor(){
-        database.schema.hasTable('chat').then(result=>{
+        mariadb.schema.hasTable('chat').then(result=>{
             if(!result){
-                database.schema.createTable('chat',table=>{
+                mariadb.schema.createTable('chat',table=>{
                     table.increments()
                     table.string('email').notNullable()
                     table.string('message').notNullable()
@@ -22,7 +22,7 @@ export default class Chat{
                 
     async saveMessage (message) {
         try {
-          await database.insert(message).table('chats')
+          await mariadb.insert(message).table('chat')
           return {status: 'success', payload:'Chat has been saved successfully.' }
         } catch (error) {
           return { status:'error', message:error}
@@ -31,7 +31,7 @@ export default class Chat{
     
       async getMessages () {
         try {
-          const chats = await database.select().table('chats')
+          const chats = await mariadb.select().table('chat')
           return { status: 'success', payload: chats }
         } catch (error) {
           return { status:'error', message:error}
