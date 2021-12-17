@@ -3,10 +3,11 @@ import {Server} from 'socket.io'
 import {engine} from 'express-handlebars'
 import cors from 'cors'
 import router from './routes/products.js'
+import routerChat from './routes/chat.js'
 import upload from './services/upload.js'
-import Messages from './classes/Messages.js'
+import Chat from './classes/Messages.js'
 import __dirname, {authMiddleware} from './utils.js'
-import mariadb from './config.js'
+import database from './config.js'
 
 const app = express()
 const PORT = process.env.PORT || 8080;
@@ -14,7 +15,7 @@ const server = app.listen(PORT,()=>{
     console.log("Listening on port: ",PORT)
 })
 export const io = new Server(server)
-const messages = new Messages()
+const messages = new Chat()
 
 const admin = true
 
@@ -31,6 +32,7 @@ app.use((req,res,next)=>{
 app.use(express.static(__dirname+'/public'))
 app.use(cors())
 app.use(router)
+app.use(routerChat)
 app.use((err,req,res,next)=>{
     console.log(err.stack)
     res.status(500).send('Error en el servidor')
@@ -62,23 +64,14 @@ app.get('/view/products',(req,res)=>{
     })
 })
 
+let chats = await messages.getMessages()
+
 io.on('connection', socket => {
     console.log('Cliente conectado.')
-    messages.getMessages().then(result => {
-      if (result.status === 'success') {
-        io.emit('chats', result.payload)
-      }
-    })
-    socket.on('chats', data => {
-      messages.saveMessage(data)
-        .then(result => console.log(result))
-        .then(() => {
-          messages.getMessages().then(result => {
-            if (result.status === 'success') {
-              io.emit('chats', result.payload)
-            }
-          })
-        })
+    socket.emit('chat', chats.payload)
+    socket.on('chat', async data => {
+      messages.saveMessages(data)
+      io.emit('chat', chats.payload)
     })
   })
 
