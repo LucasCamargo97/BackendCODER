@@ -32,7 +32,6 @@ app.use((req,res,next)=>{
 app.use(express.static(__dirname+'/public'))
 app.use(cors())
 app.use(router)
-app.use(routerChat)
 app.use((err,req,res,next)=>{
     console.log(err.stack)
     res.status(500).send('Error en el servidor')

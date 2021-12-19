@@ -28,12 +28,19 @@ msgInput.addEventListener('keyup', e => {
 const sendBtn = document.getElementById('sendBtn')
 
 sendBtn.addEventListener('click', e => {
+  let data = {email:email,message:msg}
+  fetch('http://localhost:8080/api/chat',{
+        method:'POST',
+        body:JSON.stringify(data),
+        headers:{
+            "Content-type":"application/json"
+        }})
   e.preventDefault()
   if (!email || !msg) window.alert('email or message inputs are empty!')
   const date = new Date()
   const theDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}
   ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
-  socket.emit('chat', { email: email, date: theDate, msg: msg })
+  socket.emit('chat', { email: email, date: chat.created_at, message: msg })
 })
 
 socket.on('chat', data => {
@@ -41,7 +48,7 @@ socket.on('chat', data => {
   const chat = data.map(chat => {
     return `<p>
             <span style='color: blue; font-weight: 600;'>${chat.email}</span> [<span style='color: brown;'>
-            ${chat.date}</span>]: <span style='color: green;font-style: italic;'>${chat.msg}</span>
+            ${chat.created_at}</span>]: <span style='color: green;font-style: italic;'>${chat.message}</span>
           </p>`
   }).join('')
   chatDiv.innerHTML = chat
