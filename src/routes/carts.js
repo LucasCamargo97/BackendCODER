@@ -1,49 +1,64 @@
 import express from 'express'
-import Cart from '../classes/Cart.js'
-const carts = new Cart()
+import CartsFile from '../daos/carts/CarritosDaoArchivos.js'
+import CartsMongoDB from '../daos/carts/CarritosDaoMongoDB.js'
+import CartsFirebase from '../daos/carts/CarritosDaoFirebase.js'
+import { TECHNOLOGY } from '../config.js'
+
+let cartsService
+
+switch (TECHNOLOGY) {
+  case 'file':
+    cartsService = new CartsFile()
+    break
+  case 'mongodb':
+    cartsService = new CartsMongoDB()
+    break
+  case 'firebase':
+    cartsService = new CartsFirebase()
+    break
+  default:
+    cartsService = new CartsFile()
+    break
+}
+
 const cartRouter = express.Router()
 
-//----------------GET-------------------------
-
-cartRouter.get('/api/cart/:id/products', (req, res) => {
-  const id = Number(req.params.id)
-  carts.getAll(id).then(result => {
+cartRouter.post('/', (req, res) => {
+  cartsService.createCart().then(result => {
     if (result.status === 'success') res.status(200).json(result)
     else res.status(500).send(result)
   })
 })
 
-//----------------POST-------------------------
-
-cartRouter.post('/api/cart', (req, res) => {
-  carts.create().then(result => {
+cartRouter.delete('/:id', (req, res) => {
+  const cartId = req.params.id
+  cartsService.deleteCartById(cartId).then(result => {
     if (result.status === 'success') res.status(200).json(result)
     else res.status(500).send(result)
   })
 })
 
-cartRouter.post('/api/cart/:id/products/:productId', (req, res) => {
-  const cartId = Number(req.params.id)
-  const productId = Number(req.params.productId)
-  carts.addProduct(cartId, productId).then(result => {
+cartRouter.get('/:id/products', (req, res) => {
+  const cartId = req.params.id
+  cartsService.getProductsByCartId(cartId).then(result => {
     if (result.status === 'success') res.status(200).json(result)
     else res.status(500).send(result)
   })
 })
 
-//-----------------DELETE----------------------
-cartRouter.delete('/api/cart/:id', (req, res) => {
-  const id = Number(req.params.id)
-  carts.deleteCartById(id).then(result => {
+cartRouter.post('/:id/products/:productId', (req, res) => {
+  const cartId = req.params.id
+  const productId = req.params.productId
+  cartsService.addProductToCart(cartId, productId).then(result => {
     if (result.status === 'success') res.status(200).json(result)
     else res.status(500).send(result)
   })
 })
 
-cartRouter.delete('/api/cart/:id/products/:productId', (req, res) => {
-  const cartId = Number(req.params.id)
-  const productId = Number(req.params.productId)
-  carts.deleteProduct(cartId, productId).then(result => {
+cartRouter.delete('/:id/products/:productId', (req, res) => {
+  const cartId = req.params.id
+  const productId = req.params.productId
+  cartsService.deleteProductFromCart(cartId, productId).then(result => {
     if (result.status === 'success') res.status(200).json(result)
     else res.status(500).send(result)
   })

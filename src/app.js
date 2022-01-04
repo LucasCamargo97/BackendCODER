@@ -2,15 +2,15 @@ import express from 'express'
 import {Server} from 'socket.io'
 import {engine} from 'express-handlebars'
 import cors from 'cors'
-import router from './routes/products.js'
+import productsRouter from './routes/products.js'
 import cartRouter from './routes/carts.js'
 import upload from './services/upload.js'
-import Contenedor from './classes/Contenedor.js'
-import __dirname, {authMiddleware} from './utils.js'
+import Contenedor from './contenedores/ContenedorArchivo.js'
+import {__dirname, authMiddleware} from './utils.js'
+import {PORT} from './config.js'
 
 const contenedor = new Contenedor()
 const app = express()
-const PORT = process.env.PORT || 8080;
 const server = app.listen(PORT,()=>{
     console.log("Listening on port: ",PORT)
 })
@@ -33,8 +33,8 @@ app.use((req,res,next)=>{
 })
 app.use(express.static(__dirname+'/public'))
 app.use(cors())
-app.use(router)
-app.use(cartRouter)
+app.use('/api/products', productsRouter)
+app.use('/api/cart',cartRouter)
 app.use((err,req,res,next)=>{
     console.log(err.stack)
     res.status(500).send('Error en el servidor')

@@ -1,14 +1,17 @@
+import Contenedor from '../../contenedores/ContenedorArchivo.js'
+import { __dirname } from '../../utils.js'
 import fs from 'fs'
-import __dirname from '../utils.js'
-const productURL = __dirname+'/files/products.json'
 
-class Contenedor {
-  async save(producto) {
+class ProductsFile extends Contenedor {
+  constructor () {
+    super(__dirname + '/daos/db/products.json')
+  }
+  async createProduct(producto) {
     try {
       if (Object.keys(producto).length === 0) throw new Error('falta el parametro del producto o esta vacio')
       const result = await fs.promises
-        .readFile(productURL, "utf-8");
-      console.log(`Se leyó el archivo ${productURL} con exito`);
+        .readFile(this.URL, "utf-8");
+      console.log(`Se leyó el archivo ${this.URL} con exito`);
       let id = null;
       let aux = !result ? "" : JSON.parse(result);
       const hasProduct = aux.find(e => e.title === producto.title)
@@ -28,7 +31,7 @@ class Contenedor {
       aux.push(producto);
       try {
         await fs.promises
-          .writeFile(productURL, JSON.stringify(aux, null, 2));
+          .writeFile(this.URL, JSON.stringify(aux, null, 2));
         console.log("Escritura con exito");
         return {status:"success", message:`Se asigno el id ${producto.id} al objeto`};
       } catch (error) {
@@ -39,15 +42,15 @@ class Contenedor {
         console.error("falta el parametro producto");
       if (error_1.message.includes("no such file or directory")) {
         console.error(error_1.message);
-        console.log(`Se creo el el archivo ${productURL}`);
-        fs.writeFileSync(productURL, "");
+        console.log(`Se creo el el archivo ${this.URL}`);
+        fs.writeFileSync(this.URL, "");
       }
       console.error(`error en la lectura..${error_1}`);
     }
   }
   async getById(id){
       try {
-      const result = await fs.promises.readFile(productURL, 'utf-8');
+      const result = await fs.promises.readFile(this.URL, 'utf-8');
       if (!id)
         throw new Error('Falta el parametro id');
       let aux = !result ? "" : JSON.parse(result);
@@ -64,7 +67,7 @@ class Contenedor {
   }
   async getAll(){
     try{
-      let result = await fs.promises.readFile(productURL,'utf-8');
+      let result = await fs.promises.readFile(this.URL,'utf-8');
       let products = JSON.parse(result);
       return {status:"success",payload:products}
   }catch{
@@ -74,7 +77,7 @@ class Contenedor {
 
   async updateProduct(id,body){
       try {
-      const result = await fs.promises.readFile(productURL, 'utf-8');
+      const result = await fs.promises.readFile(this.URL, 'utf-8');
       if (!id)
         throw new Error('Falta el parametro id');
       let aux = !result ? "" : JSON.parse(result);
@@ -94,7 +97,7 @@ class Contenedor {
         thumbnail: body.thumbnail
       };
       products = [...products, newObj];
-      await fs.promises.writeFile(productURL, JSON.stringify(products, null, 2));
+      await fs.promises.writeFile(this.URL, JSON.stringify(products, null, 2));
       return ({
         status: "Success", message: "Product updated"
       });
@@ -106,7 +109,7 @@ class Contenedor {
   async deleteById (id) {
     try {
       if (!id) throw new Error('Falta el parametro ID')
-      const productsFile = await fs.promises.readFile(productURL, 'utf-8')
+      const productsFile = await fs.promises.readFile(this.URL, 'utf-8')
       const products = productsFile ? JSON.parse(productsFile) : []
 
       const product = products.find(e => e.id === id)
@@ -116,7 +119,7 @@ class Contenedor {
       if (newProducts.length === 0) newProducts = ''
       else newProducts = JSON.stringify(newProducts)
 
-      await fs.promises.writeFile(productURL, newProducts)
+      await fs.promises.writeFile(this.URL, newProducts)
       return { status: 'success', message: 'Producto eliminado satisfactoriamente.' }
     } catch (err) {
       console.log(`Save file error: ${err.message}`)
@@ -125,11 +128,11 @@ class Contenedor {
   }
 
   deleteAll(){
-    fs.writeFile(productURL, '', error => {
+    fs.writeFile(this.URL, '', error => {
         try {
             if (error) throw new Error(`ERROR${error}`)
             console.log(
-                `Todos los objetos fueron removidos del documento ${productURL}!`
+                `Todos los objetos fueron removidos del documento ${this.URL}!`
             )
         } catch (error) {
             console.error(error)
@@ -138,4 +141,5 @@ class Contenedor {
   }
 }
 
-export default Contenedor;
+
+export default ProductsFile

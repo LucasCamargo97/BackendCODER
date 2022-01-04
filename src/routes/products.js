@@ -1,74 +1,74 @@
 import express from 'express'
 import upload from '../services/upload.js'
-import {io} from '../app.js'
 import { authMiddleware } from '../utils.js'
-const router = express.Router()
-import Contenedor from '../classes/Contenedor.js'
-const contenedor = new Contenedor()
+import ProductsFile from '../daos/products/ProductosDaoArchivos.js'
+import ProductsMongoDB from '../daos/products/ProductosDaoMongoDB.js'
+import ProductsFirebase from '../daos/products/ProductosDaoFirebase.js'
+import { TECHNOLOGY } from '../config.js'
 
-//---------------GET---------------------------------
-router.get('/api/productos', (req,res)=>{
-    contenedor.getAll().then(result=>{
-        res.send(result);
+let productsService
+
+switch (TECHNOLOGY) {
+  case 'file':
+    productsService = new ProductsFile()
+    break
+  case 'mongodb':
+    productsService = new ProductsMongoDB()
+    break
+  case 'firebase':
+    productsService = new ProductsFirebase()
+    break
+  default:
+    productsService = new ProductsFile()
+    break
+}
+
+const productsRouter = express.Router()
+
+productsRouter.get('/', (req, res) => {
+  productsService.getAll()
+    .then(result => {
+      if (result.status === 'success') return res.status(200).json(result)
+      else return res.status(500).json(result)
     })
 })
 
-router.get('/api/productos/:id',(req,res)=>{
-    let id = parseInt(req.params.id);
-    contenedor.getById(id).then(result=>{
-        res.send(result)
+productsRouter.get('/:id', (req, res) => {
+  const productId = req.params.id
+  productsService.getById(productId)
+    .then(result => {
+      if (result.status === 'success') return res.status(200).json(result)
+      else return res.status(500).json(result)
     })
 })
 
-router.get('/api/productoRandom',(req,res)=>{
-    const id = Math.floor(Math.random() * 3) +1
-    contenedor.getById(id).then(result=>{
-        res.send(result)
+productsRouter.post('/', authMiddleware, upload.single('picture'), (req, res) => {
+  const file = req.file
+  const product = req.body
+  productsService.createProduct(product)
+    .then(result => {
+      if (result.status === 'success') return res.status(200).json(result)
+      else return res.status(500).json(result)
     })
 })
 
-//------------------POST---------------------------
-router.post('/api/productos', authMiddleware, (req,res)=>{
-    let body = req.body
-    console.log(body)
-    contenedor.save(body).then(result=>{
-        res.send(result);
+productsRouter.put('/:id', authMiddleware, (req, res) => {
+  const productId = req.params.id
+  const product = req.body
+  productsService.updateProduct(productId, product)
+    .then(result => {
+      if (result.status === 'success') return res.status(200).json(result)
+      else return res.status(500).json(result)
     })
 })
 
-router.post('/',authMiddleware, upload.single('image'),(req,res)=>{
-    let file = req.file;
-    let product = req.body;
-    product.thumbnail = req.protocol+"://"+req.hostname+":8080"+'/images/'+file.filename;
-    contenedor.save(product).then(result=>{
-        res.send(result);
-        if(result.status==="success"){
-            contenedor.getAll().then(result=>{
-                console.log(result);
-                io.emit('deliverProducts',result);
-            })
-        }
+productsRouter.delete('/:id', authMiddleware, (req, res) => {
+  const productId = req.params.id
+  productsService.deleteById(productId)
+    .then(result => {
+      if (result.status === 'success') return res.status(200).json(result)
+      else return res.status(500).json(result)
     })
 })
 
-
-//----------------PUT-------------------------------
-router.put('/api/productos/:id',authMiddleware, (req,res)=>{
-    let body = req.body;
-    let id = Number(req.params.id);
-    contenedor.updateProduct(id,body).then(result=>{
-        res.send(result);
-    })
-})
-
-//----------------DELETE---------------------------
-
-router.delete('/api/productos/:id', authMiddleware, (req,res)=>{
-    let id= Number(req.params.id);
-    contenedor.deleteById(id).then(result=>{
-        res.send(result)
-    })
-})
-
-
-export default router
+export default productsRouter
