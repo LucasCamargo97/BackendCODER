@@ -1,88 +1,74 @@
 import express from 'express'
-import {Server} from 'socket.io'
-import {engine} from 'express-handlebars'
+import mongoose from 'mongoose'
 import cors from 'cors'
-import productsRouter from './routes/products.js'
-import cartRouter from './routes/carts.js'
-import upload from './services/upload.js'
-import Contenedor from './contenedores/ContenedorArchivo.js'
-import {__dirname, authMiddleware} from './utils.js'
-import {PORT} from './config.js'
+import { generate, __dirname } from './utils.js'
+import { engine } from 'express-handlebars'
+import { Server } from 'socket.io'
+import { PORT, MONGO_URI } from './config.js'
+import ChatsService from './services/chatService.js'
+import chats from './routes/Chats.js'
 
-const contenedor = new Contenedor()
+const chatsService = new ChatsService()
+
+export const getConnection = async () => {
+  try {
+    if (mongoose.connection.readyState === 0) {
+      await mongoose.connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+    }
+  } catch (err) {
+    console.error(err)
+  }
+}
+
 const app = express()
-const server = app.listen(PORT,()=>{
-    console.log("Listening on port: ",PORT)
+const server = app.listen(PORT, () => {
+  console.log(`Listening on ${PORT} port.`)
+  getConnection()
 })
-export const io = new Server(server)
+
+const io = new Server(server)
+
 io.on('connection', socket => {
-    console.log('Se ha conectado un nuevo cliente!')
-})
-
-const admin = true
-
-app.engine('handlebars',engine());
-app.set('views',__dirname+'/views');
-app.set('view engine','handlebars');
-app.use(express.json());
-app.use(express.urlencoded({extended:true}))
-app.use((req,res,next)=>{
-    console.log(new Date().toTimeString().split(" ")[0], req.method, req.url);
-    req.auth = admin
-    next();
-})
-app.use(express.static(__dirname+'/public'))
-app.use(cors())
-app.use('/api/products', productsRouter)
-app.use('/api/cart',cartRouter)
-app.use((err,req,res,next)=>{
-    console.log(err.stack)
-    res.status(500).send('Error en el servidor')
-})
-
-app.post('/api/uploadfile',upload.fields([
-    {
-        name:'file', maxCount:1
-    },
-    {
-        name:"documents", maxCount:3
-    }
-]),(req,res)=>{
-    const files = req.files;
-    console.log(files);
-    if(!files||files.length===0){
-        res.status(500).send({messsage:"No se subió archivo"})
-    }
-    res.send(files);
-})
-
-app.get('/view/products',(req,res)=>{
-    contenedor.getAll().then(result=>{
-        let info = result.payload;
-        let prepObj ={
-            products : info
-        }
-        res.render('products',prepObj)
+  socket.emit('welcome', '¡Se ha establecido una conexión con socket.io!')
+  console.log('Cliente conectado.')
+  chatsService.getChats()
+    .then(result => {
+      io.emit('chats', result.payload)
     })
+    .catch(err => {
+      console.error(err)
+    })
+  socket.on('chats', data => {
+    chatsService.getChats()
+      .then(result => {
+        io.emit('chats', result.payload)
+      })
+      .catch(err => {
+        console.error(err)
+      })
+  })
 })
 
-const chat = []
+app.engine('handlebars', engine())
+app.set('view engine', 'handlebars')
+app.set('views', './views')
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
+app.use(cors())
+app.use(express.static(__dirname + '/public'))
 
-  io.on('connection', async socket=>{
-    console.log(`El socket ${socket.id} se ha conectado`)
-    let products = await contenedor.getAll();
-    socket.emit('deliverProducts',products);
+app.use('/api/chats', chats)
 
-    socket.emit('chat', chat)
-    socket.on('chat', data => {
-    chat.push({ email: data.email, date: data.date, msg: data.msg })
-    io.emit('chat', chat)
+app.get('/api/products-test', (req, res) => {
+  try {
+    const quantity = req.query.quantity ? parseInt(req.query.quantity) : 5
+    res.send({ status: 'success', payload: generate(quantity) })
+  } catch (err) {
+    console.error(err)
+    res.send({ status: 'error', message: err.message })
+  }
 })
 
+app.get('/', (req, res) => {
+  res.render('index')
 })
-
-
-
-
-
-
