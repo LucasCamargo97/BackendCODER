@@ -2,8 +2,8 @@ import mongoose from 'mongoose'
 const { Schema, model } = mongoose
 
 export const ChatSchema = new Schema({
-  author: { type: Schema.Types.ObjectId, ref: 'Author' },
-  message: { type: String, required: true }
+  user: { type: Schema.Types.ObjectId, ref: 'User' },
+  text: { type: String, required: true }
 }, { timestamps: true })
 
 ChatSchema.set('toJSON', {
