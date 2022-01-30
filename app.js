@@ -1,26 +1,22 @@
 import express from 'express'
 import mongoose from 'mongoose'
 import session from 'express-session'
-import cookieParser from 'cookie-parser'
-import path from 'path'
 import MongoStore from 'connect-mongo'
 import cors from 'cors'
 import { __dirname } from './utils.js'
 import { engine } from 'express-handlebars'
-import { Server } from 'socket.io'
 import { PORT, MONGO_URI } from './config/config.js'
-import ChatsService from './services/chatsService.js'
-import chats from './routes/chats.js'
 import { UserModel } from './dao/models/User.js'
-import upload from './services/upload.js'
+import uploadService from './services/uploadService.js'
+import passport from 'passport'
+import initializePassportConfig from './config/passport.js'
 
-const expires = 600
-const chatsService = new ChatsService()
+const expires = 10
 
 export const getConnection = async () => {
   try {
     if (mongoose.connection.readyState === 0) {
-      await mongoose.connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+      mongoose.connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
     }
   } catch (err) {
     console.error(err)
@@ -28,61 +24,37 @@ export const getConnection = async () => {
 }
 
 const app = express()
-const server = app.listen(PORT, () => {
+app.listen(PORT, () => {
   console.log(`Listening on ${PORT} port.`)
   getConnection()
 })
 
-const io = new Server(server)
-
-io.on('connection', socket => {
-  socket.emit('welcome', '¡Se ha establecido una conexión con socket.io!')
-  console.log('Cliente conectado.')
-  chatsService.getChats()
-    .then(result => {
-      io.emit('chats', result.payload)
-    })
-    .catch(err => {
-      console.error(err)
-    })
-  socket.on('chats', async data => {
-    chatsService.createChat(data)
-      .then(result => {
-        io.emit('chats', result.payload)
-        chatsService.getChats()
-          .then(result => {
-            io.emit('chats', result.payload)
-          })
-          .catch(err => {
-            console.error(err)
-          })
-      })
-      .catch(err => {
-        console.error(err)
-      })
-  })
-})
-
-app.engine('handlebars', engine())
-app.set("views", path.join(__dirname, "views"));
-app.set('view engine', 'handlebars')
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
-app.use(cors())
-app.use('/uploads/', express.static(__dirname + '/uploads'))
-app.use(express.static(__dirname + '/public'))
 
 app.use(session({
   store: MongoStore.create({ mongoUrl: MONGO_URI }),
-  secret: "lckk1097",
-  resave: true,
-  saveUninitialized: true,
+  secret: "LuK1t45",
+  resave: false,
+  saveUninitialized: false,
   cookie: { maxAge: expires * 1000 }
 }))
 
-app.use('/api/chats', chats)
+app.engine('handlebars', engine())
+app.set('view engine', 'handlebars')
+app.set('views', './views')
 
-app.post('/api/register', upload.single('avatar'), async (req, res) => {
+app.use('/uploads/', express.static(__dirname + '/uploads'))
+app.use(express.static(__dirname + '/public'))
+
+app.use(cors())
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
+
+initializePassportConfig()
+app.use(passport.initialize())
+app.use(passport.session())
+
+
+app.post('/api/register', uploadService.single('avatar'), async (req, res) => {
   try {
     const file = req.file
     const user = req.body
@@ -121,17 +93,28 @@ app.post('/api/login', async (req, res) => {
   }
 })
 
-app.get('/api/login', (req, res) => {
-  if (req.session.user)
+app.get('/api/login', async (req, res) => {
+  if (req.user) {
+    res.send(req.user)
+  }
+  else if (req.session.user)
     res.send(req.session.user)
   else
     res.send({ status: 'error', message: 'You are not log in.' })
 })
 
 app.post('/api/logout', (req, res) => {
-  const { username } = req.session.user
-  req.session.user = null
-  res.send({ status: 'success', payload: { username: username } })
+  req.session.destroy()
+  req.logout()
+  res.send({ status: 'success', message: 'Se ha cerrado la sesión con éxito.' })
+})
+
+app.get('/auth/facebook', passport.authenticate('facebook', { scope: ['email'] }), (req, res) => {
+
+})
+
+app.get('/fail', (req, res) => {
+  res.send({ status: 'error', message: 'Ha fallado el inicio de sesión en Facebook.' })
 })
 
 app.get('/', (req, res) => {
@@ -142,10 +125,6 @@ app.get('/register', (req, res) => {
   res.render('register')
 })
 
-app.get('/chat', (req, res) => {
-  res.render('chat')
-})
-
-app.get('/logout', (req, res) => {
-  res.render('logout')
+app.get('/home', passport.authenticate('facebook', { failureRedirect: '/fail' }), (req, res) => {
+  res.render('home')
 })
