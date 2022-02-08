@@ -10,7 +10,7 @@ const initializePassportConfig = () => {
   passport.use('facebook', new FacebookStrategy({
     clientID: process.env.FACEBOOK_CLIENT_ID,
     clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
-    callbackURL: '/home',
+    callbackURL: process.env.NGROK_LINK + '/home',
     profileFields: ['id', 'displayName', 'photos', 'emails']
   }, async (accessToken, refreshToken, profile, done) => {
     try {

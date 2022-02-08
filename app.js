@@ -5,12 +5,16 @@ import MongoStore from 'connect-mongo'
 import cors from 'cors'
 import { __dirname } from './utils.js'
 import { engine } from 'express-handlebars'
-import { PORT, MONGO_URI } from './config/config.js'
+import { MONGO_URI } from './config/config.js'
 import { UserModel } from './dao/models/User.js'
 import uploadService from './services/uploadService.js'
 import passport from 'passport'
 import initializePassportConfig from './config/passport.js'
+import minimist from 'minimist'
+import { fork } from 'child_process'
 
+const minimizedArgs = minimist(process.argv)
+const PORT = minimizedArgs.port || 8080
 const expires = 10
 
 export const getConnection = async () => {
@@ -32,7 +36,7 @@ app.listen(PORT, () => {
 
 app.use(session({
   store: MongoStore.create({ mongoUrl: MONGO_URI }),
-  secret: "LuK1t45",
+  secret: "Luk1t45",
   resave: false,
   saveUninitialized: false,
   cookie: { maxAge: expires * 1000 }
@@ -127,4 +131,26 @@ app.get('/register', (req, res) => {
 
 app.get('/home', passport.authenticate('facebook', { failureRedirect: '/fail' }), (req, res) => {
   res.render('home')
+})
+
+app.get('/info', (req, res) => {
+  res.send({
+    status: 'success',
+    payload: {
+      args: process.argv,
+      os: process.platform,
+      nodeVersion: process.version,
+      memoryUsage: process.memoryUsage(),
+      execPath: process.execPath,
+      processId: process.pid,
+      projectFolder: process.cwd()
+    }
+  })
+})
+
+app.get('/api/randoms', async (req, res) => {
+  const calculus = fork('calculus', [req.query.cant])
+  calculus.on('message', (data) => {
+    res.send({ numbers: data })
+  })
 })

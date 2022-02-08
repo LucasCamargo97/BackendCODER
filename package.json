@@ -1,7 +1,7 @@
 {
-  "name": "proyectofinal",
+  "name": "class28",
   "version": "1.0.0",
-  "description": "Proyecto final",
+  "description": "Class 28",
   "main": "./app.js",
   "type": "module",
   "scripts": {
@@ -12,16 +12,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/LucasCamargo97/BackendCODER"
+    "url": "https://github.com/LucasCamargo97/BackendCODER"
   },
   "keywords": [],
   "author": "Lucas Camargo",
   "license": "ISC",
   "homepage": "https://github.com/LucasCamargo97/BackendCODER",
   "dependencies": {
-    "@babel/cli": "^7.16.0",
-    "@babel/core": "^7.16.12",
-    "@babel/node": "^7.16.8",
+    "@babel/cli": "7.16.0",
+    "@babel/core": "7.16.0",
+    "@babel/node": "7.16.0",
     "@babel/preset-env": "7.16.4",
     "babel-plugin-transform-import-meta": "2.1.0",
     "bcrypt": "^5.0.1",
@@ -32,6 +32,7 @@
     "express": "^4.17.2",
     "express-handlebars": "^6.0.1",
     "express-session": "^1.17.2",
+    "minimist": "^1.2.5",
     "mongoose": "^6.1.7",
     "multer": "^1.4.4",
     "passport": "^0.5.2",
