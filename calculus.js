@@ -1,8 +1,8 @@
-let quantity = parseInt(process.argv[2]) || 100000000;
+let quantity = parseInt(process.argv[2]) || 100000000
 const result = {}
 
 for (let i = 0; i < quantity; i++) {
-  let randomNum = Math.ceil(Math.random() * 1000)
+  let randomNum = Math.floor(Math.random() * 1000)
   result[randomNum] = result[randomNum] ? result[randomNum] + 1 : 1
 }
 
