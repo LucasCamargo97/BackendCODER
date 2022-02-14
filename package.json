@@ -1,5 +1,5 @@
 {
-  "name": "desafio30",
+  "name": "clase30",
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
@@ -11,6 +11,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.17.2"
+    "compression": "^1.7.4",
+    "express": "^4.17.2",
+    "winston": "^3.6.0"
   }
 }

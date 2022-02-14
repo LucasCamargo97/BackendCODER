@@ -1,13 +1,31 @@
 import express from 'express'
 import os from 'os'
-import { fork } from 'child_process'
+import { createLogger } from './logger.js'
 
-const PORT = parseInt(process.argv[2] || 8080)
-
+const PORT = parseInt(process.argv[2]) || 8080
 const app = express()
 app.listen(PORT, () => console.log(`Listening on ${PORT} port.`))
 
-app.use(express.static('/public'))
+const logger = createLogger()
+
+app.use((req, res, next) => {
+  logger.info(`Received request ${req.method} method at ${req.path}.`)
+  next()
+})
+
+app.get('/', (req, res) => {
+  res.send({ status: 'success', message: 'Welcome Luks\'s API.' })
+})
+
+app.get('/error', (req, res) => {
+  const { username } = req.query
+  if (!username) {
+    logger.error(`Username params is missing on ${req.method} method at ${req.path} route.`)
+    res.send({ status: 'error', message: 'Invalid params.' })
+  } else {
+    res.send({ status: 'success', username: username })
+  }
+})
 
 app.get('/info', (req, res) => {
   res.send({
@@ -25,9 +43,7 @@ app.get('/info', (req, res) => {
   })
 })
 
-app.get('/api/randoms', (req, res) => {
-  const calculus = fork('calculus', [req.query.cant])
-  calculus.on('message', (data) => {
-    res.send({ port: PORT, numbers: data })
-  })
+app.use((req, res) => {
+  logger.warn(`${req.method} method in path ${req.path} not implemented.`)
+  res.status(404).json({ status: 'error', description: `${req.method} method in path ${req.path} not implemented.` })
 })
