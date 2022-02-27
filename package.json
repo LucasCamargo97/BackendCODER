@@ -1,18 +1,30 @@
 {
-  "name": "clase30",
+  "name": "proyecto_final",
   "version": "1.0.0",
   "description": "",
-  "main": "app.js",
-  "type": "module",
+  "main": "index.js",
+  "type":"module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon src/app.js"
   },
-  "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "compression": "^1.7.4",
-    "express": "^4.17.2",
-    "winston": "^3.6.0"
+    "@babel/core": "^7.16.5",
+    "@babel/node": "^7.16.5",
+    "@babel/preset-env": "^7.16.5",
+    "babel-plugin-transform-import-meta": "^2.1.0",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "express-handlebars": "^6.0.1",
+    "firebase-admin": "^10.0.1",
+    "handlebars": "^4.7.7",
+    "moment": "^2.29.1",
+    "mongoose": "^6.1.3",
+    "multer": "^1.4.3",
+    "nodemon": "^2.0.15",
+    "socket.io": "^4.4.0"
   }
 }

@@ -1,0 +1,72 @@
+[
+  {
+    "title": "Manzana",
+    "description": "La manzana es una fruta comestible. Tiene forma de globo, un poco hundida en sus extremos. Su epicarpio es verdoso o amarillento y presenta semillas de tamaño pequeño, protegidas por un endocarpio coriáceo. Las manzanas rojas y las manzanas verdes son las más conocidas, aunque también existen las manzanas amarillas.",
+    "code": "23423",
+    "thumbnail": "https://st.depositphotos.com/1000955/1261/i/600/depositphotos_12616481-stock-photo-fresh-red-apple.jpg",
+    "price": "45",
+    "stock": "156",
+    "id": 1,
+    "timestamp": 1639087182098
+  },
+  {
+    "title": "Banana",
+    "description": "Es un fruto con cualidades variables en tamaño, color y firmeza, alargado, generalmente curvado y carnoso, rico en almidón cubierto con una cáscara, que puede ser verde, amarilla, roja, púrpura o marrón cuando está madura. Los frutos crecen en piñas que cuelgan de la parte superior de la planta.",
+    "code": "15488",
+    "thumbnail": "https://media.istockphoto.com/photos/banana-picture-id1184345169?k=20&m=1184345169&s=612x612&w=0&h=EKwCw7Zx20N3l8G_rQI6KcitWTQ5ahkgmEBr2QA1FMk=",
+    "price": "54",
+    "stock": "54",
+    "id": 2,
+    "timestamp": 1639087264942
+  },
+  {
+    "title": "Pera",
+    "description": "La pera es el fruto del peral (Pyrus communis, de la familia de las Rosáceas). La pera es una fruta jugosa, carnosa, de diferente tamaño, sabor y color (del verde al amarillo, al rojo, hasta el color castaña), según las variedades de pera cultivadas. ... La flor del peral es blanca y aparece en primavera.",
+    "code": "165456",
+    "thumbnail": "https://www.niter.com.uy/wp-content/uploads/2017/09/beneficios-de-las-peras.jpg",
+    "price": "89",
+    "stock": "75",
+    "id": 3,
+    "timestamp": 1639087335216
+  },
+  {
+    "title": "Sandia",
+    "description": "La sandía es un fruto grande y de forma más o menos esférica que suele consumirse cruda como postre. Su pulpa es de color rojizo o amarillento y de sabor dulce. La pulpa es dulce, jugosa, refrescante y de color amarillento o rojizo. Contiene muchas pepitas de color negro, marrón o blanco.",
+    "code": "1482",
+    "thumbnail": "https://5aldia.cl/wp-content/uploads/2018/03/sandia.jpg",
+    "price": "110",
+    "stock": "80",
+    "id": 4,
+    "timestamp": 1639087393000
+  },
+  {
+    "title": "Arándanos",
+    "description": "El arándano es un fruto que crece silvestre en zonas frescas del hemisferio norte. Es una baya globosa de color negro azulado que mide unos 6mm de diámetro. Es una baya globosa, de unos 6mm de diámetro y de color negro azulado. Su pulpa es aromática, jugosa y de sabor algo ácido.",
+    "code": "745274",
+    "thumbnail": "http://cdn.shopify.com/s/files/1/0271/3360/8038/products/arandanos_1200x1200.jpg?v=1587041312",
+    "price": "120",
+    "stock": "25",
+    "id": 5,
+    "timestamp": 1639087506262
+  },
+  {
+    "title": "Café",
+    "description": "El café es la bebida que se obtiene a partir de los granos tostados y molidos de los frutos de la planta del café (cafeto); es altamente estimulante por su contenido de cafeína,1​ una sustancia psicoactiva. Este producto es uno de los más comercializados del mundo y una de las tres bebidas1​ más consumidas del mundo (junto con el agua y el té).",
+    "code": "23567",
+    "thumbnail": "data:image/jpeg;base64,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",
+    "price": "180",
+    "stock": "350",
+    "id": 6,
+    "timestamp": 1639358111252
+  },
+  {
+    "title": "Té",
+    "description": "El té es la infusión de las hojas y brotes de la planta del té (Camellia sinensis). La popularidad de esta bebida es solamente sobrepasada por el agua.​ Su sabor es fresco, ligeramente amargo y astringente; este gusto es agradable para mucha gente.",
+    "code": "322367",
+    "thumbnail": "https://media.istockphoto.com/photos/tea-cup-picture-id610745468?k=20&m=610745468&s=612x612&w=0&h=AAsr_m23jOx8yl9Itm7QKUaEDcnLAsMbIp5UuPiDiHY=",
+    "price": "120",
+    "stock": "360",
+    "id": 7,
+    "timestamp": 1639437599029
+  }
+]
