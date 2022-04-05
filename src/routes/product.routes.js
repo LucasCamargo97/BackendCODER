@@ -1,17 +1,17 @@
 import { Router } from 'express'
-import { getProducts, getProduct, createProduct, updateProduct, deleteProduct } from '../controllers/productController.js'
+import { fetchProducts, fetchProduct, createProduct, updateProduct, deleteProduct } from '../controllers/productController.js'
 import uploadService from '../services/uploadService.js'
 
 const productRouter = Router()
 
 productRouter.post('/', uploadService.single('picture'), createProduct)
 
-productRouter.get('/', getProducts)
+productRouter.get('/', fetchProducts)
 
-productRouter.get('/:id', getProduct)
+productRouter.get('/:productId', fetchProduct)
 
-productRouter.put('/:id', uploadService.single('picture'), updateProduct)
+productRouter.put('/:productId', uploadService.single('picture'), updateProduct)
 
-productRouter.delete('/:id', deleteProduct)
+productRouter.delete('/:productId', deleteProduct)
 
 export default productRouter

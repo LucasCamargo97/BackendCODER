@@ -1,74 +1,102 @@
-import ProductService from '../services/productService.js'
+import { productService } from '../services/services.js'
 import { PORT } from '../config/config.js'
 import loggerHandler from '../middlewares/loggerHandler.js'
-const service = new ProductService()
+import ProductDTO from '../dto/ProductDTO.js'
 const logger = loggerHandler()
 
 export const createProduct = async (req, res) => {
-  const { file } = req
-  const { name, category, description, code, price, stock } = req.body
-  let picture = ''
-  if (file) {
-    picture = `${req.protocol}://${req.hostname}:${PORT}/uploads/${file.filename}`
+  try {
+    const { file } = req
+    let { name, category, description, code, price, stock, picture } = req.body
+    picture = file ? `${req.protocol}://${req.hostname}:${PORT}/uploads/${file.filename}` : picture
+
+    const productFound = await productService.getOne({ name })
+    if (productFound) throw new Error('Product already exists.')
+
+    const document = {
+      name,
+      category,
+      description,
+      code,
+      price: parseInt(price),
+      stock: parseInt(stock),
+      picture
+    }
+
+    const product = await productService.add(document)
+    const productDTO = new ProductDTO(product)
+    res.json({ product: productDTO })
+  } catch (err) {
+    logger.error(err.message)
+    res.status(400).json({ message: err.message })
   }
-  service.createProduct(name, category, description, code, picture, price, stock)
-    .then(product => {
-      res.json({ product })
-    })
-    .catch(err => {
-      logger.error(err)
-      res.status(500).json({ message: err.message })
-    })
 }
 
-export const getProducts = async (req, res) => {
-  service.getProducts()
-    .then(products => {
-      res.json({ products })
-    })
-    .catch(err => {
-      logger.error(err)
-      res.status(500).json({ message: err.message })
-    })
+export const fetchProducts = async (req, res) => {
+  try {
+    const products = await productService.get()
+    const productDTOs = products.map(product => new ProductDTO(product))
+    res.json({ products: productDTOs })
+  } catch (err) {
+    logger.error(err.message)
+    res.status(400).json({ message: err.message })
+  }
 }
 
-export const getProduct = async (req, res) => {
-  const productId = req.params.id
-  service.getProductById(productId)
-    .then(product => {
-      res.json({ product })
-    })
-    .catch(err => {
-      logger.error(err)
-      res.status(500).json({ message: err.message })
-    })
+export const fetchProduct = async (req, res) => {
+  try {
+    const { productId } = req.params
+
+    const product = await productService.getOne({ _id: productId })
+    if (!product) throw new Error('Non-existent product.')
+
+    const productDTO = new ProductDTO(product)
+    res.json({ product: productDTO })
+  } catch (err) {
+    logger.error(err.message)
+    res.status(400).json({ message: err.message })
+  }
 }
 
 export const updateProduct = async (req, res) => {
-  const productId = req.params.id
-  const file = req.file
-  const product = req.body
-  if (file) {
-    product.picture = `${req.protocol}://${req.hostname}:${process.env.PORT}/uploads/${file.filename}`
+  try {
+    const { productId } = req.params
+    const { file } = req
+    let { name, category, description, code, price, stock, picture } = req.body
+    picture = file ? `${req.protocol}://${req.hostname}:${PORT}/uploads/${file.filename}` : picture
+
+    const productNotFound = await productService.getOne({ _id: productId })
+    if (!productNotFound) throw new Error('Non-existent product.')
+
+    const productFound = await productService.getOne({ _id: { $ne: productId }, name: { $eq: name } })
+    if (productFound) throw new Error('Product already exists.')
+
+    const document = {
+      name,
+      category,
+      description,
+      code,
+      price: parseInt(price),
+      stock: parseInt(stock),
+      picture
+    }
+
+    const product = await productService.update(productId, document)
+    const productDTO = new ProductDTO(product)
+    res.json({ product: productDTO })
+  } catch (err) {
+    logger.error(err.message)
+    res.status(400).json({ message: err.message })
   }
-  service.updateProductById(productId, product)
-    .then(product => {
-      res.json({ product })
-    })
-    .catch(err => {
-      logger.error(err)
-      res.status(500).json({ message: err.message })
-    })
 }
 
 export const deleteProduct = async (req, res) => {
-  const productId = req.params.id
-  service.deleteProductById(productId)
-    .then(() => {
-      res.sendStatus(204)
-    })
-    .catch(err => {
-      logger.error(err)
-      res.status(500).json({ message: err.message })
-    })
+  try {
+    const { productId } = req.params
+    await productService.delete(productId)
+    res.sendStatus(204)
+  } catch (err) {
+    logger.error(err.message)
+    res.status(400).json({ message: err.message })
+  }
 }

@@ -1,17 +1,22 @@
-import Cart from '../dao/models/Cart.js'
-import User from '../dao/models/User.js'
+import User from '../models/User.js'
+import Repository from './Repository.js'
+import bcrypt from 'bcrypt'
 
-export default class UserService {
-  async getUsers () {
-    return await User.find().populate('role')
+export default class UserService extends Repository {
+  constructor (dao) {
+    super(dao, User.model)
   }
 
-  async getUser (userId) {
-    if (!userId) throw new Error('Missing \'userId\' parameter!')
+  async getByMail (email) {
+    return this.dao.find({ email }, User.model)
+  }
 
-    const userFound = await User.findById(userId).populate('role')
-    if (!userFound) throw new Error('User not found.')
+  async encryptPassword (password) {
+    const salt = await bcrypt.genSalt(10)
+    return await bcrypt.hash(password, salt)
+  }
 
-    return userFound
+  async comparePassword (password, receivedPassword) {
+    return await bcrypt.compare(password, receivedPassword)
   }
 }

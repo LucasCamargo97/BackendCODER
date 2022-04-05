@@ -1,84 +1,91 @@
-import Cart from '../dao/models/Cart.js'
-import Product from '../dao/models/Product.js'
-import User from '../dao/models/User.js'
+import Cart from '../models/Cart.js'
+import Repository from './Repository.js'
 
-export default class CartService {
-  async getCart (cartId) {
-    if (!cartId) throw new Error('Missing \'cartId\' parameter!')
-
-    const cartFound = await Cart.findById(cartId).populate('products')
-    if (!cartFound) throw new Error('Cart not found.')
-
-    return cartFound
-  }
-
-  async getCarts () {
-    return await Cart.find()
+export default class CartService extends Repository {
+  constructor (dao) {
+    super(dao, Cart.model)
   }
 
   async createCart (userId) {
-    if (!userId) throw new Error('Missing \'userId\' parameter!')
-
-    const userFound = await User.findById(userId)
-    if (!userFound) throw new Error('User not found.')
-
-    const cartCreated = await Cart.create({ products: [], user: userFound._id })
-
-    userFound.cart = cartCreated._id
-    userFound.save()
-
-    return cartCreated
+    return await this.add({ products: [], user: userId })
   }
 
-  async addProduct (cartId, productId) {
-    if (!cartId || !productId) throw new Error('Missing \'cartId\' or \'productId\' parameter!')
+  // async getCart (cartId) {
+  //   if (!cartId) throw new Error('Missing \'cartId\' parameter!')
 
-    const cart = await Cart.findById(cartId)
-    if (!cart) throw new Error('Non-existent cart.')
+  //   const cartFound = await Cart.findById(cartId).populate('products')
+  //   if (!cartFound) throw new Error('Cart not found.')
 
-    const product = await Product.findById(productId)
-    if (!product) throw new Error('Non-existent product.')
+  //   return cartFound
+  // }
 
-    const productFound = await Cart.findById(cartId).findOne({ products: productId })
-    if (productFound) throw new Error('Product already exists in cart.')
+  // async getCarts () {
+  //   return await Cart.find()
+  // }
 
-    await Cart.findByIdAndUpdate(cartId, { $push: { products: product } })
-  }
+  // async createCart (userId) {
+  //   if (!userId) throw new Error('Missing \'userId\' parameter!')
 
-  async getProducts (cartId) {
-    if (!cartId) throw new Error('Missing \'cartId\' parameter!')
+  //   const userFound = await User.findById(userId)
+  //   if (!userFound) throw new Error('User not found.')
 
-    const cart = await Cart.findById(cartId).populate('products')
-    if (!cart) throw new Error('Non-existent cart.')
+  //   const cartCreated = await Cart.create({ products: [], user: userFound._id })
 
-    const products = cart.products
-    return products
-  }
+  //   userFound.cart = cartCreated._id
+  //   userFound.save()
 
-  async deleteProduct (cartId, productId) {
-    if (!cartId || !productId) throw new Error('Missing \'cartId\' or \'productId\' parameter!')
+  //   return cartCreated
+  // }
 
-    const cart = await Cart.findById(cartId)
-    if (!cart) throw new Error('Non-existent cart.')
+  // async addProduct (cartId, productId) {
+  //   if (!cartId || !productId) throw new Error('Missing \'cartId\' or \'productId\' parameter!')
 
-    const product = await Cart.findById(cartId).findOne({ products: productId })
-    if (!product) throw new Error('Non-existent product in cart.')
+  //   const cart = await Cart.findById(cartId)
+  //   if (!cart) throw new Error('Non-existent cart.')
 
-    await Cart.findByIdAndUpdate(cartId, { $pull: { products: productId } })
-  }
+  //   const product = await Product.findById(productId)
+  //   if (!product) throw new Error('Non-existent product.')
 
-  async deleteCart (cartId) {
-    if (!cartId) throw new Error('Missing \'cartId\' parameter!')
+  //   const productFound = await Cart.findById(cartId).findOne({ products: productId })
+  //   if (productFound) throw new Error('Product already exists in cart.')
 
-    const cart = await Cart.findById(cartId)
-    if (!cart) throw new Error('Non-existent cart.')
+  //   await Cart.findByIdAndUpdate(cartId, { $push: { products: product } })
+  // }
 
-    const userFound = await User.findById(cart.user)
-    if (!userFound) throw new Error('User not found.')
+  // async getProducts (cartId) {
+  //   if (!cartId) throw new Error('Missing \'cartId\' parameter!')
 
-    userFound.cart = undefined
-    userFound.save()
+  //   const cart = await Cart.findById(cartId).populate('products')
+  //   if (!cart) throw new Error('Non-existent cart.')
 
-    await Cart.findByIdAndDelete(cartId)
-  }
+  //   const products = cart.products
+  //   return products
+  // }
+
+  // async deleteProduct (cartId, productId) {
+  //   if (!cartId || !productId) throw new Error('Missing \'cartId\' or \'productId\' parameter!')
+
+  //   const cart = await Cart.findById(cartId)
+  //   if (!cart) throw new Error('Non-existent cart.')
+
+  //   const product = await Cart.findById(cartId).findOne({ products: productId })
+  //   if (!product) throw new Error('Non-existent product in cart.')
+
+  //   await Cart.findByIdAndUpdate(cartId, { $pull: { products: productId } })
+  // }
+
+  // async deleteCart (cartId) {
+  //   if (!cartId) throw new Error('Missing \'cartId\' parameter!')
+
+  //   const cart = await Cart.findById(cartId)
+  //   if (!cart) throw new Error('Non-existent cart.')
+
+  //   const userFound = await User.findById(cart.user)
+  //   if (!userFound) throw new Error('User not found.')
+
+  //   userFound.cart = undefined
+  //   userFound.save()
+
+  //   await Cart.findByIdAndDelete(cartId)
+  // }
 }

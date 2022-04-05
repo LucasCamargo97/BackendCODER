@@ -1,26 +1,32 @@
+import { __dirname } from '../utils.js'
 import { config } from 'dotenv'
 config()
 
 export const PORT = process.env.PORT || 8080
+export const PERSISTENCE = process.env.PERSISTENCE
+export const ENVIRONMENT = process.env.ENVIRONMENT
 
-export const JWT = {
-  SECRET: process.env.JWT_SECRET,
-  EXPIRES: process.env.JWT_EXPIRES
+export const SWAGGER = {
+  spec: {
+    definition: {
+      openapi: '3.0.0',
+      info: {
+        title: 'Tienda',
+        version: '1.0.0'
+      },
+      servers: [
+        {
+          url: `http://localhost:${PORT}`
+        }
+      ]
+    },
+    apis: [
+      `${__dirname}/routes/*.js`
+    ]
+  }
 }
 
 export const MONGO = {
-  URI: process.env.MONGO_URI || ''
-}
-
-export const TWILIO = {
-  CLIENT_SID: process.env.TWILIO_CLIENT_SID,
-  AUTH_TOKEN: process.env.TWILIO_AUTH_TOKEN,
-  PHONE_NUMBER: process.env.TWILIO_PHONE_NUMBER,
-  SANDBOX_WHATSAPP_NUMBER: process.env.TWILIO_SANDBOX_WHATSAPP_NUMBER,
-  PERSONAL_NUMBER: process.env.TWILIO_PERSONAL_NUMBER
-}
-
-export const MAILER_AUTH = {
-  USER: process.env.MAILER_AUTH_USER,
-  PASSWORD: process.env.MAILER_AUTH_PASSWORD
+  URI_DEVELOPMENT: process.env.MONGO_URI_DEVELOPMENT || '',
+  URI_TESTER: process.env.MONGO_URI_TESTER || ''
 }
