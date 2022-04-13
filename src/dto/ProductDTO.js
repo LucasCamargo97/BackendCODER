@@ -7,5 +7,6 @@ export default class ProductDTO {
     this.code = product.code
     this.price = parseInt(product.price)
     this.stock = parseInt(product.stock)
+    this.picture = product.picture
   }
 }

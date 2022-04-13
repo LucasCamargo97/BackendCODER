@@ -11,9 +11,14 @@ import userRouter from './routes/user.routes.js'
 import notFoundHandler from './middlewares/notFoundHandler.js'
 import loggerHandler from './middlewares/loggerHandler.js'
 
+import { graphqlHTTP } from 'express-graphql'
+import { graphqlSchema, graphqlResolvers } from './middlewares/graphql.js'
 import { PORT, SWAGGER } from './config/config.js'
 import { __dirname } from './utils.js'
-// import pkg from '../package.json'
+
+import { createRequire } from 'module'
+const require = createRequire(import.meta.url)
+const pkg = require('../package.json')
 
 const logger = loggerHandler()
 
@@ -34,16 +39,21 @@ export default class Server {
 
   routes () {
     this.app.get('/api', (req, res) => {
-      // res.json({
-      //   name: pkg.name,
-      //   description: pkg.description,
-      //   version: pkg.version,
-      //   author: pkg.author
-      // })
+      res.json({
+        name: pkg.name,
+        description: pkg.description,
+        version: pkg.version,
+        author: pkg.author
+      })
     })
     this.app.use('/api/products', productRouter)
     this.app.use('/api/carts', cartRouter)
     this.app.use('/api/users', userRouter)
+    this.app.use('/api/graphql', graphqlHTTP({
+      schema: graphqlSchema,
+      rootValue: graphqlResolvers,
+      graphiql: true
+    }))
     this.app.use(notFoundHandler)
   }
 

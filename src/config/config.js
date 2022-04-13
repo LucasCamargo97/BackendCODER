@@ -4,14 +4,13 @@ config()
 
 export const PORT = process.env.PORT || 8080
 export const PERSISTENCE = process.env.PERSISTENCE
-export const ENVIRONMENT = process.env.ENVIRONMENT
 
 export const SWAGGER = {
   spec: {
     definition: {
       openapi: '3.0.0',
       info: {
-        title: 'Tienda',
+        title: 'Gläzen API',
         version: '1.0.0'
       },
       servers: [
@@ -27,6 +26,5 @@ export const SWAGGER = {
 }
 
 export const MONGO = {
-  URI_DEVELOPMENT: process.env.MONGO_URI_DEVELOPMENT || '',
-  URI_TESTER: process.env.MONGO_URI_TESTER || ''
+  URI: process.env.MONGO_URI || ''
 }

@@ -27,7 +27,7 @@ export const createUser = async (req, res) => {
 
     const user = await userService.add(document)
     const userDTO = new UserDTO(user)
-    res.json({ user: userDTO })
+    res.json(userDTO)
   } catch (err) {
     logger.error(err.message)
     res.status(400).json({ message: err.message })
@@ -38,7 +38,7 @@ export const fetchUsers = async (req, res) => {
   try {
     const users = await userService.get()
     const userDTOs = users.map(user => new UserDTO(user))
-    res.json({ users: userDTOs })
+    res.json(userDTOs)
   } catch (err) {
     logger.error(err.message)
     res.status(400).json({ message: err.message })
@@ -53,7 +53,7 @@ export const fetchUser = async (req, res) => {
     if (!user) throw new Error('Non-existent user.')
 
     const userDTO = new UserDTO(user)
-    res.json({ user: userDTO })
+    res.json(userDTO)
   } catch (err) {
     logger.error(err.message)
     res.status(400).json({ message: err.message })
@@ -89,7 +89,7 @@ export const updateUser = async (req, res) => {
 
     const user = await userService.update(userId, document)
     const userDTO = new UserDTO(user)
-    res.json({ user: userDTO })
+    res.json(userDTO)
   } catch (err) {
     logger.error(err.message)
     res.status(400).json({ message: err.message })
